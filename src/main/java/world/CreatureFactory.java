@@ -40,14 +40,14 @@ public class CreatureFactory implements Runnable {
     }
 
     public Player newPlayer(Screen screen, List<String> messages) {
-        Player player = new Player(screen, this.world, (char) 1, Color.gray, 10, 0, 0, 9, messages);
+        Player player = new Player(screen, this.world, (char) 1, Color.gray, 10, 0, 0, 9, messages, 0);
         world.addAtEmptyLocation(player);
         // new PlayerAI(player, messages);
         return player;
     }
 
-    public Player newPlayerAtLocation(Screen screen, List<String> messages, int x, int y) {
-        Player player = new Player(screen, this.world, (char) 1, AsciiPanel.brightWhite, 10, 0, 0, 9, messages);
+    public Player newPlayerAtLocation(Screen screen, List<String> messages, int x, int y, int id) {
+        Player player = new Player(screen, this.world, (char) 1, AsciiPanel.brightWhite, 10, 0, 0, 9, messages, id);
         world.addAtLocation(player, x, y);
         // new PlayerAI(player, messages);
         return player;

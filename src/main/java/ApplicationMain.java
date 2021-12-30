@@ -18,6 +18,7 @@
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 
@@ -58,7 +59,12 @@ public class ApplicationMain extends JFrame implements KeyListener {
      * @param e
      */
     public void keyPressed(KeyEvent e) {
-        screen = screen.respondToUserInput(e);
+        try {
+            screen = screen.respondToUserInput(e);
+        } catch (IOException | InterruptedException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
         // repaint();
     }
 

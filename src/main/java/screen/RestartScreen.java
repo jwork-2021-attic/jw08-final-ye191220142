@@ -18,6 +18,7 @@
 package screen;
 
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 
 import asciiPanel.AsciiPanel;
 
@@ -38,7 +39,7 @@ public abstract class RestartScreen implements Screen {
     public abstract void displayOutput(AsciiPanel terminal);
 
     @Override
-    public Screen respondToUserInput(KeyEvent key) {
+    public Screen respondToUserInput(KeyEvent key) throws IOException {
         switch (key.getKeyCode()) {
             case KeyEvent.VK_ENTER:
                 return new PlayScreen();
@@ -50,6 +51,14 @@ public abstract class RestartScreen implements Screen {
                 return new LoadScreen();
             case KeyEvent.VK_NUMPAD2:
                 return new LoadScreen();
+            case KeyEvent.VK_3:
+                return new ServerScreen();
+            case KeyEvent.VK_NUMPAD3:
+                return new ServerScreen();
+            case KeyEvent.VK_4:
+                return new SelectScreen();
+            case KeyEvent.VK_NUMPAD4:
+                return new SelectScreen();
             default:
                 return this;
         }

@@ -31,5 +31,7 @@ public class StartScreen extends RestartScreen {
         terminal.write("Choose the screen to start game.", 0, 1);
         terminal.write("1 : Singal new game", 0, 3);
         terminal.write("2 : Load last game", 0, 5);
+        terminal.write("3 : Open a server", 0, 7);
+        terminal.write("4 : Open a client", 0, 9);
     }
 }

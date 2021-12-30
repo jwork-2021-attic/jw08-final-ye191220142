@@ -51,6 +51,7 @@ public class PlayScreen implements Screen {
     protected Screen screen;
     protected int enemyCount;
     protected ExecutorService exec;
+    protected boolean net;
 
     public PlayScreen() {
         this.screenWidth = 50;
@@ -64,17 +65,31 @@ public class PlayScreen implements Screen {
         CreatureFactory creatureFactory = new CreatureFactory(this.world);
         createBlocks(creatureFactory);
         createCreatures(creatureFactory);
+        net = false;
     }
 
     public PlayScreen(int i) {
         // 因为子类会默认调用父类无参构造函数，所以需要写一个带参构造函数并显示调用，以防止读取屏幕时会创建一个新建屏幕
+        net = false;
+    }
+
+    public int screenWidth(){
+        return screenWidth;
+    }
+
+    public int screenHeight(){
+        return screenHeight;
     }
 
     public void setScreen(Screen screen) {
         this.screen = screen;
     }
 
-    private void createBlocks(CreatureFactory creatureFactory) {
+    public World world(){
+        return world;
+    }
+
+    protected void createBlocks(CreatureFactory creatureFactory) {
         for (int i = 0; i < this.screenWidth - 2; i++) {
             for (int j = 0; j < this.screenHeight - 2; j++) {
                 if (maze[i][j] == 1)
@@ -85,7 +100,7 @@ public class PlayScreen implements Screen {
         }
     }
 
-    private void createCreatures(CreatureFactory creatureFactory) {
+    protected void createCreatures(CreatureFactory creatureFactory) {
         this.player = creatureFactory.newPlayer(screen, this.messages);
         for (int i = 0; i < 100; i++) {
             // creatureFactory.newCoin();
@@ -95,12 +110,11 @@ public class PlayScreen implements Screen {
             exec.execute(enemy);
         }
         exec.execute(creatureFactory);
-        // CountTask counttask = new CountTask(world, enemyCount);
         exec.execute(new CountTask(world, this));
         exec.shutdown();
     }
 
-    private void createWorld() {
+    public void createWorld() {
         // world = new WorldBuilder(60, 60).makeCaves().build();
         worldBuilder = new WorldBuilder(this.screenWidth, this.screenHeight);
         world = worldBuilder.buildMaze().build();
@@ -114,7 +128,7 @@ public class PlayScreen implements Screen {
                     x = 1;
     }
 
-    private void displayTiles(AsciiPanel terminal, int left, int top) {
+    protected void displayTiles(AsciiPanel terminal, int left, int top) {
         // Show terrain
         for (int x = 0; x < screenWidth; x++) {
             for (int y = 0; y < screenHeight; y++) {
@@ -153,7 +167,8 @@ public class PlayScreen implements Screen {
     @Override
     public void displayOutput(AsciiPanel terminal) {
         // Terrain and creatures
-        displayTiles(terminal, getScrollX(), getScrollY());
+        // displayTiles(terminal, getScrollX(), getScrollY());
+        displayTiles(terminal, 0, 0);
         // Player
         // terminal.write(player.glyph(), player.x() - getScrollX(), player.y() -
         // getScrollY(), player.color());
@@ -193,47 +208,51 @@ public class PlayScreen implements Screen {
 
     @Override
     public Screen respondToUserInput(KeyEvent key) {
-        switch (key.getKeyCode()) {
-            case KeyEvent.VK_LEFT:
-                player.moveBy(-1, 0);
-                break;
-            case KeyEvent.VK_RIGHT:
-                player.moveBy(1, 0);
-                break;
-            case KeyEvent.VK_UP:
-                player.moveBy(0, -1);
-                break;
-            case KeyEvent.VK_DOWN:
-                player.moveBy(0, 1);
-                break;
-            case KeyEvent.VK_H:
-                player.heal(1);
-                break;
-            case KeyEvent.VK_SPACE:
-                player.setBomb();
-                break;
-            case KeyEvent.VK_W:
-                player.shoot(0);
-                break;
-            case KeyEvent.VK_A:
-                player.shoot(1);
-                break;
-            case KeyEvent.VK_S:
-                player.shoot(2);
-                break;
-            case KeyEvent.VK_D:
-                player.shoot(3);
-                break;
-            case KeyEvent.VK_F5:
-                save();
-                return new StartScreen();
-        }
-        if (enemyCount == 0)
-            return new WinScreen();
-        else if (player.hp() > 0)
+        if(net == true){
             return this;
-        else
-            return new LoseScreen();
+        } else{
+            switch (key.getKeyCode()) {
+                case KeyEvent.VK_LEFT:
+                    player.moveBy(-1, 0);
+                    break;
+                case KeyEvent.VK_RIGHT:
+                    player.moveBy(1, 0);
+                    break;
+                case KeyEvent.VK_UP:
+                    player.moveBy(0, -1);
+                    break;
+                case KeyEvent.VK_DOWN:
+                    player.moveBy(0, 1);
+                    break;
+                case KeyEvent.VK_H:
+                    player.heal(1);
+                    break;
+                case KeyEvent.VK_SPACE:
+                    player.setBomb();
+                    break;
+                case KeyEvent.VK_W:
+                    player.shoot(0);
+                    break;
+                case KeyEvent.VK_A:
+                    player.shoot(1);
+                    break;
+                case KeyEvent.VK_S:
+                    player.shoot(2);
+                    break;
+                case KeyEvent.VK_D:
+                    player.shoot(3);
+                    break;
+                case KeyEvent.VK_F5:
+                    save();
+                    return new StartScreen();
+            }
+            if (enemyCount == 0)
+                return new WinScreen();
+            else if (player.hp() > 0)
+                return this;
+            else
+                return new LoseScreen();
+        }
     }
 
     public void save() {

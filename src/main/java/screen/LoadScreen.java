@@ -42,7 +42,7 @@ public class LoadScreen extends PlayScreen {
                 switch (Integer.parseInt(arr[0])) {
                     case 0: // player
                         player = creatureFactory.newPlayerAtLocation(screen, messages, Integer.parseInt(arr[1]),
-                                Integer.parseInt(arr[2]));
+                                Integer.parseInt(arr[2]), 0);
                         player.setHp(Integer.parseInt(arr[3]));
                         player.setMoney(Integer.parseInt(arr[4]));
                         break;

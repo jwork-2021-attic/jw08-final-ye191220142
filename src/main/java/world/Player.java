@@ -41,13 +41,20 @@ public class Player extends Creature {
     private List<String> messages;
 
     private ExecutorService exec;
+    
+    private int id;
 
     public Player(Screen screen, World world, char glyph, Color color, int maxHP, int attack, int defense,
-            int visionRadius, List<String> messages) {
+            int visionRadius, List<String> messages, int id) {
         super(world, glyph, color, maxHP, attack, defense, visionRadius, 0, 100);
         this.messages = messages;
         this.screen = screen;
+        this.id = id;
         exec = Executors.newCachedThreadPool();
+    }
+
+    public int id(){
+        return id;
     }
 
     @Override
